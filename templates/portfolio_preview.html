@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}{{ p['full_name'] }} — Portfolio{% endblock %}
+
+{% block content %}
+<div class="preview-header">
+  <div>
+    <h1>{{ p['full_name'] }}</h1>
+    <p>{{ p['email'] }}{% if p['phone'] %} &nbsp;·&nbsp; {{ p['phone'] }}{% endif %}</p>
+    {% if p['dob'] %}<p class="muted">DOB: {{ p['dob'] }}</p>{% endif %}
+  </div>
+  <div class="preview-actions">
+    <a href="{{ url_for('download_portfolio', pid=p['id']) }}" class="btn-primary">
+      ⬇ Download PDF
+    </a>
+    <a href="{{ url_for('portfolio_builder') }}" class="btn-secondary">Build Another</a>
+  </div>
+</div>
+
+<div class="preview-grid">
+
+  {% if p['bio'] %}
+  <div class="preview-section full">
+    <h3>About</h3>
+    <p>{{ p['bio'] }}</p>
+  </div>
+  {% endif %}
+
+  {% if p['skills'] %}
+  <div class="preview-section">
+    <h3>Skills</h3>
+    <div class="skills-wrap">
+      {% for s in p['skills'].split(',') %}
+        <span class="skill-tag">{{ s.strip() }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- GitHub Score -->
+  <div class="preview-section">
+    <h3>GitHub Verification</h3>
+    {% if p['github_link'] %}
+      <p class="muted">{{ p['github_link'] }}</p>
+    {% endif %}
+    <div class="gh-score-row">
+      <div class="gh-score-circle {% if p['github_score'] >= 65 %}green{% elif p['github_score'] >= 35 %}amber{% else %}red{% endif %}">
+        {{ p['github_score'] }}<small>/100</small>
+      </div>
+      <span class="badge badge-{{ p['github_status'] | lower | replace(' ', '-') }}">
+        {{ p['github_status'] }}
+      </span>
+    </div>
+  </div>
+
+  {% if p['experience'] %}
+  <div class="preview-section full">
+    <h3>Experience</h3>
+    <p style="white-space:pre-line">{{ p['experience'] }}</p>
+  </div>
+  {% endif %}
+
+  {% if p['education'] %}
+  <div class="preview-section">
+    <h3>Education</h3>
+    <p style="white-space:pre-line">{{ p['education'] }}</p>
+  </div>
+  {% endif %}
+
+  {% if p['projects'] %}
+  <div class="preview-section">
+    <h3>Projects</h3>
+    <p style="white-space:pre-line">{{ p['projects'] }}</p>
+  </div>
+  {% endif %}
+
+  {% if p['linkedin'] %}
+  <div class="preview-section">
+    <h3>LinkedIn</h3>
+    <a href="{{ p['linkedin'] }}" target="_blank">{{ p['linkedin'] }}</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

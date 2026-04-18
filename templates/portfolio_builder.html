@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Portfolio Builder — GitVerify{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>📄 Portfolio Builder</h1>
+  <p>Fill in your details to create a shareable, downloadable portfolio.</p>
+</div>
+
+{% if github_result and not github_result.error %}
+<div class="result-card compact">
+  <strong>GitHub Score:</strong>
+  <span class="score-inline">{{ github_result.score }}/100</span>
+  <span class="badge badge-{{ github_result.status | lower | replace(' ', '-') }}">
+    {{ github_result.status }}
+  </span>
+  {% if github_result.flags %}
+  <span class="flag-inline">⚠ {{ github_result.flags | join(', ') }}</span>
+  {% endif %}
+</div>
+{% elif github_result and github_result.error %}
+<div class="alert alert-error">{{ github_result.error }}</div>
+{% endif %}
+
+<div class="form-card">
+  <form method="POST" id="portfolio-form">
+
+    <div class="form-row">
+      <div>
+        <label>Full Name *</label>
+        <input type="text" name="full_name" value="{{ form_data.get('full_name', '') }}" required>
+      </div>
+      <div>
+        <label>Date of Birth</label>
+        <input type="date" name="dob" value="{{ form_data.get('dob', '') }}">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label>Email *</label>
+        <input type="email" name="email" value="{{ form_data.get('email', '') }}" required>
+      </div>
+      <div>
+        <label>Phone</label>
+        <input type="text" name="phone" value="{{ form_data.get('phone', '') }}" placeholder="+91 XXXXX XXXXX">
+      </div>
+    </div>
+
+    <label>Bio / Summary</label>
+    <textarea name="bio" rows="3" placeholder="A short summary about yourself...">{{ form_data.get('bio', '') }}</textarea>
+
+    <label>Skills <small>(comma separated)</small></label>
+    <input type="text" name="skills" value="{{ form_data.get('skills', '') }}" placeholder="Python, Flask, React, SQL...">
+
+    <label>Experience</label>
+    <textarea name="experience" rows="3" placeholder="Company, role, duration...">{{ form_data.get('experience', '') }}</textarea>
+
+    <label>Education</label>
+    <textarea name="education" rows="2" placeholder="Degree, university, year...">{{ form_data.get('education', '') }}</textarea>
+
+    <label>Projects</label>
+    <textarea name="projects" rows="3" placeholder="Project names, links, descriptions...">{{ form_data.get('projects', '') }}</textarea>
+
+    <div class="form-row github-row">
+      <div style="flex:1">
+        <label>GitHub Profile / Repo Link</label>
+        <input type="text" name="github_link" id="github_link"
+               value="{{ form_data.get('github_link', '') }}"
+               placeholder="https://github.com/owner/repo">
+      </div>
+      <div style="align-self:flex-end">
+        <button type="submit" name="action" value="verify" class="btn-secondary">Verify GitHub</button>
+      </div>
+    </div>
+
+    <label>LinkedIn URL <small>(optional)</small></label>
+    <input type="text" name="linkedin" value="{{ form_data.get('linkedin', '') }}"
+           placeholder="https://linkedin.com/in/yourprofile">
+
+    <div style="margin-top:20px;">
+      <button type="submit" class="btn-primary" style="font-size:1rem;padding:12px 32px;">
+        💾 Create Portfolio
+      </button>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

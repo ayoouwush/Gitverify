@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Home — GitVerify{% endblock %}
+
+{% block content %}
+<div class="home-hero">
+  <h1>Welcome, {{ user_name }} 👋</h1>
+  <p class="hero-sub">What would you like to do today?</p>
+</div>
+
+<div class="card-grid">
+  <a href="{{ url_for('github_verification') }}" class="feature-card">
+    <div class="card-icon">🔍</div>
+    <h2>GitHub Verification</h2>
+    <p>Analyse any GitHub repository. Get a trust score, activity flags, and verification status.</p>
+    <span class="card-btn">Verify a Repo →</span>
+  </a>
+
+  <a href="{{ url_for('portfolio_builder') }}" class="feature-card">
+    <div class="card-icon">📄</div>
+    <h2>Portfolio Builder</h2>
+    <p>Build a professional portfolio with GitHub score included. Download it as a PDF instantly.</p>
+    <span class="card-btn">Build Portfolio →</span>
+  </a>
+</div>
+{% endblock %}

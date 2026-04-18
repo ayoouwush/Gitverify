@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}GitHub Verification — GitVerify{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>🔍 GitHub Verification</h1>
+  <p>Enter a public repository URL to get an activity score and verification status.</p>
+</div>
+
+<div class="form-card">
+  <form method="POST">
+    <label>GitHub Repository URL</label>
+    <input type="text" name="repo_url" value="{{ repo_url }}"
+           placeholder="https://github.com/owner/repository" required>
+    <button type="submit" class="btn-primary">Verify Repository</button>
+  </form>
+</div>
+
+{% if result %}
+  {% if result.error %}
+    <div class="alert alert-error">{{ result.error }}</div>
+  {% else %}
+    <div class="result-card">
+      <div class="result-header">
+        <h2>{{ result.repo }}</h2>
+        <span class="badge badge-{{ result.status | lower | replace(' ', '-') }}">
+          {{ result.status }}
+        </span>
+      </div>
+
+      <div class="score-ring">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#e2e8f0" stroke-width="10"/>
+          <circle cx="60" cy="60" r="50" fill="none"
+                  stroke="{% if result.score >= 65 %}#22c55e{% elif result.score >= 35 %}#f59e0b{% else %}#ef4444{% endif %}"
+                  stroke-width="10"
+                  stroke-dasharray="{{ result.score * 3.14 }} 314"
+                  stroke-linecap="round"
+                  transform="rotate(-90 60 60)"/>
+          <text x="60" y="65" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a2e">
+            {{ result.score }}
+          </text>
+          <text x="60" y="82" text-anchor="middle" font-size="10" fill="#64748b">/100</text>
+        </svg>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric">
+          <span class="metric-val">{{ result.stars }}</span>
+          <span class="metric-lbl">Stars</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val">{{ result.commits }}</span>
+          <span class="metric-lbl">Commits</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val">{{ result.contributors }}</span>
+          <span class="metric-lbl">Contributors</span>
+        </div>
+        <div class="metric">
+          <span class="metric-val">{{ result.forks }}</span>
+          <span class="metric-lbl">Forks</span>
+        </div>
+      </div>
+
+      {% if result.flags %}
+      <div class="flags">
+        <strong>⚠ Flags:</strong>
+        <ul>
+          {% for flag in result.flags %}
+          <li>{{ flag }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endif %}
+
+{% endblock %}
